@@ -151,7 +151,7 @@
     <div class="bg-glow"></div>
 
     <!-- ── SCENE 1: Title card ── -->
-    <div id="scene-title" class="clip"
+    <div id="scene-title" class="clip" data-composition-id="scene-title" data-width="1920" data-height="1080"
          data-start="0"
          data-duration="{{SCENE1_DURATION}}"
          data-track-index="0">
@@ -161,7 +161,7 @@
     </div>
 
     <!-- ── SCENE 2: Feature demo ── -->
-    <div id="scene-demo" class="clip"
+    <div id="scene-demo" class="clip" data-composition-id="scene-demo" data-width="1920" data-height="1080"
          data-start="{{SCENE2_START}}"
          data-duration="{{SCENE2_DURATION}}"
          data-track-index="1">
@@ -176,7 +176,7 @@
     </div>
 
     <!-- ── SCENE 3: CTA ── -->
-    <div id="scene-cta" class="clip"
+    <div id="scene-cta" class="clip" data-composition-id="scene-cta" data-width="1920" data-height="1080"
          data-start="{{SCENE3_START}}"
          data-duration="{{SCENE3_DURATION}}"
          data-track-index="2">
@@ -196,39 +196,33 @@
   </div>
 
   <script>
-    /*
-     * GSAP Timeline — Your assistant fills in the timestamps from transcript.json
-     * All times are in seconds and must match audio beat boundaries.
-     */
-    const tl = gsap.timeline({ paused: true });
-
-    // Scene 1 entrance
-    tl.to(".eyebrow",  { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.3)
-      .to(".headline", { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 0.7)
-      .to(".subtitle", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.2)
-      .to("#scene-title", { opacity: 0, duration: 0.4 }, {{SCENE1_EXIT}})
-
-    // Scene 2 entrance
-      .to("#scene-demo",     { opacity: 1, duration: 0.4 },                    {{SCENE2_START}})
-      .to(".demo-copy h2",   { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, {{SCENE2_START_PLUS_0_3}})
-      .to(".demo-copy p",    { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, {{SCENE2_START_PLUS_0_6}})
-      .to(".demo-visual",    { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }, {{SCENE2_START_PLUS_0_4}})
-      .to("#scene-demo",     { opacity: 0, duration: 0.4 },                    {{SCENE2_EXIT}})
-
-    // Scene 3 entrance
-      .to("#scene-cta",      { opacity: 1, duration: 0.4 },                    {{SCENE3_START}})
-      .to(".cta-headline",   { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, {{SCENE3_START_PLUS_0_2}})
-      .to(".cta-label",      { opacity: 1, duration: 0.5 },                    {{SCENE3_START_PLUS_1_0}});
-
-    // Initial hidden states
-    gsap.set(".eyebrow, .headline, .subtitle, .cta-headline", { y: 24 });
-    gsap.set(".demo-copy h2, .demo-copy p", { x: -30, opacity: 0 });
-    gsap.set(".demo-visual", { scale: 0.96, opacity: 0 });
-
-    // Register with HyperFrames
+    // Each inline composition uses local time; the root positions the scenes.
     window.__timelines = window.__timelines || {};
-    tl.set({}, {}, {{TOTAL_DURATION}});
-    window.__timelines.feature = tl;
+    const title = gsap.timeline({ paused: true });
+    title.fromTo(".eyebrow", {opacity:0, y:24}, {opacity:1, y:0, duration:.5}, .2)
+      .fromTo(".headline", {opacity:0, y:24}, {opacity:1, y:0, duration:.7}, .4)
+      .fromTo(".subtitle", {opacity:0, y:24}, {opacity:1, y:0, duration:.5}, .9)
+      .set({}, {}, {{SCENE1_DURATION}});
+    window.__timelines["scene-title"] = title;
+
+    const demo = gsap.timeline({ paused: true });
+    demo.fromTo(".demo-copy h2", {opacity:0, x:-30}, {opacity:1, x:0, duration:.5}, .3)
+      .fromTo(".demo-copy p", {opacity:0, x:-30}, {opacity:1, x:0, duration:.5}, .6)
+      .fromTo(".demo-visual", {opacity:0, scale:.96}, {opacity:1, scale:1, duration:.6}, .4)
+      .set({}, {}, {{SCENE2_DURATION}});
+    window.__timelines["scene-demo"] = demo;
+
+    const closing = gsap.timeline({ paused: true });
+    closing.fromTo(".cta-headline", {opacity:0, y:24}, {opacity:1, y:0, duration:.6}, .2)
+      .fromTo(".cta-label", {opacity:0}, {opacity:1, duration:.5}, 1)
+      .set({}, {}, {{SCENE3_DURATION}});
+    window.__timelines["scene-cta"] = closing;
+    window.__timelines.feature = gsap.timeline({paused:true})
+      .to("#scene-title", {opacity:0, duration:.4}, {{SCENE1_EXIT}})
+      .fromTo("#scene-demo", {opacity:0}, {opacity:1, duration:.4}, {{SCENE2_START}})
+      .to("#scene-demo", {opacity:0, duration:.4}, {{SCENE2_EXIT}})
+      .fromTo("#scene-cta", {opacity:0}, {opacity:1, duration:.4}, {{SCENE3_START}})
+      .set({}, {}, {{TOTAL_DURATION}});
   </script>
 </body>
 </html>

@@ -88,7 +88,7 @@ def build(script, out, transcript, image=None, video=None, video_start=0., video
             available = float(info['format']['duration'])-video_start
             if available < last-first:
                 raise ValueError(f'Recording needs {last-first:.1f}s after the trim point; only {available:.1f}s remain.')
-            visual = f'<video id="recording" class="clip" src="{name}" muted data-start="{first}" data-duration="{round(last-first,3)}" data-media-start="{video_start}" data-volume="{video_volume}" data-track-index="4"></video>'
+            visual = f'<video id="recording" class="clip" src="{name}" muted data-start="0" data-duration="{round(last-first,3)}" data-media-start="{video_start}" data-volume="{video_volume}" data-track-index="4"></video>'
         else:
             if source.suffix.lower() not in ('.png', '.jpg', '.jpeg', '.webp'):
                 raise ValueError('Use a PNG, JPG, or WebP screenshot.')
