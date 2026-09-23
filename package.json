@@ -1,0 +1,24 @@
+{
+  "name": "agent-video-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local script-to-video studio for Codex and Claude Code",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "setup": "node tooling/run-python.cjs tooling/setup.py",
+    "doctor": "node tooling/run-python.cjs studio.py doctor",
+    "demo": "node tooling/run-python.cjs studio.py make --script scripts/hello-studio.md",
+    "studio": "node tooling/run-python.cjs studio.py",
+    "test": "node tooling/run-python.cjs -m unittest discover -s tests -v",
+    "preview": "node tooling/run-python.cjs studio.py preview",
+    "render": "node tooling/run-python.cjs studio.py render",
+    "lint:video": "hyperframes lint"
+  },
+  "dependencies": {
+    "@ffprobe-installer/ffprobe": "2.1.2",
+    "gsap": "3.14.2",
+    "hyperframes": "0.8.66"
+  }
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{FEATURE_NAME}}</title>
+
+  <!-- Brand tokens — edit _engine/templates/brand.css to change colours -->
+  <link rel="stylesheet" href="./brand.css" />
+
+  <!-- GSAP for animations -->
+  <script src="./gsap.min.js"></script>
+
+  <style>
+    /* ── Reset ── */
+    h1, h2, p { overflow-wrap: anywhere; }
+    .workflow { display: flex; flex-direction: column; gap: 40px; font-size: 46px; padding: 48px; }
+    .workflow span { color: var(--brand-primary); }
+    .demo-visual video { width:100%; height:100%; object-fit:contain; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: var(--brand-width);
+      height: var(--brand-height);
+      background: var(--brand-bg);
+      font-family: var(--brand-font);
+      overflow: hidden;
+      color: var(--brand-text);
+    }
+
+    /* ── Background glow ── */
+    .bg-glow {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 25% 60%, var(--brand-glow) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 30%, rgba(0,160,255,0.05) 0%, transparent 50%);
+    }
+
+    /* ══════════════════════════════════
+       SCENE 1 — Title card
+       Duration: {{SCENE1_DURATION}}s
+    ══════════════════════════════════ */
+    #scene-title {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 28px;
+    }
+
+    .eyebrow {
+      font-size: 18px; font-weight: 600;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--brand-primary); opacity: 0;
+    }
+
+    .headline {
+      font-size: 100px;
+      font-weight: var(--brand-font-weight-heading);
+      text-align: center; line-height: 1.08;
+      max-width: 1400px; opacity: 0;
+    }
+    .headline span { color: var(--brand-primary); }
+
+    .subtitle {
+      font-size: 32px;
+      color: var(--brand-text-muted);
+      text-align: center; max-width: 900px;
+      opacity: 0;
+    }
+
+    /* ══════════════════════════════════
+       SCENE 2 — Feature demo
+       Duration: {{SCENE2_DURATION}}s
+    ══════════════════════════════════ */
+    #scene-demo {
+      position: absolute; inset: 0;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 120px; gap: 80px;
+      opacity: 0;
+    }
+
+    .demo-copy {
+      flex: 0 0 660px;
+      display: flex; flex-direction: column; gap: 24px;
+    }
+
+    .demo-copy h2 {
+      font-size: 66px;
+      font-weight: var(--brand-font-weight-heading);
+      line-height: 1.1; opacity: 0;
+    }
+    .demo-copy h2 span { color: var(--brand-primary); }
+
+    .demo-copy p {
+      font-size: 26px;
+      color: var(--brand-text-muted);
+      line-height: 1.65; opacity: 0;
+    }
+
+    .demo-visual {
+      flex: 1; height: 660px;
+      border-radius: 16px;
+      border: 1px solid var(--brand-bg-border);
+      background: var(--brand-bg-surface);
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+      opacity: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .demo-visual img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* ══════════════════════════════════
+       SCENE 3 — CTA
+       Duration: {{SCENE3_DURATION}}s
+    ══════════════════════════════════ */
+    #scene-cta {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 32px;
+      opacity: 0;
+    }
+
+    .cta-headline {
+      font-size: 92px;
+      font-weight: var(--brand-font-weight-heading);
+      text-align: center; line-height: 1.1;
+      max-width: 1400px; opacity: 0;
+    }
+    .cta-headline span { color: var(--brand-primary); }
+
+    .cta-label {
+      font-size: 20px; letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--brand-text-subtle);
+      opacity: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="stage"
+       data-composition-id="feature"
+       data-duration="{{TOTAL_DURATION}}"
+       data-start="0"
+       data-width="1920"
+       data-height="1080">
+
+    <div class="bg-glow"></div>
+
+    <!-- ── SCENE 1: Title card ── -->
+    <div id="scene-title" class="clip"
+         data-start="0"
+         data-duration="{{SCENE1_DURATION}}"
+         data-track-index="0">
+      <div class="eyebrow">{{PRODUCT_NAME}}</div>
+      <h1 class="headline">{{FEATURE_NAME}}</h1>
+      <p class="subtitle">{{FEATURE_TAGLINE}}</p>
+    </div>
+
+    <!-- ── SCENE 2: Feature demo ── -->
+    <div id="scene-demo" class="clip"
+         data-start="{{SCENE2_START}}"
+         data-duration="{{SCENE2_DURATION}}"
+         data-track-index="1">
+      <div class="demo-copy">
+        <h2>{{DEMO_HEADING}}</h2>
+        <p>{{DEMO_BODY}}</p>
+      </div>
+      <div class="demo-visual">
+        <!-- Your assistant replaces this with an <img> or custom HTML when visuals are provided -->
+        {{VISUAL}}
+      </div>
+    </div>
+
+    <!-- ── SCENE 3: CTA ── -->
+    <div id="scene-cta" class="clip"
+         data-start="{{SCENE3_START}}"
+         data-duration="{{SCENE3_DURATION}}"
+         data-track-index="2">
+      <h2 class="cta-headline">{{CTA_LINE1}}<br><span>{{CTA_LINE2}}</span></h2>
+      <div class="cta-label">{{PRODUCT_NAME}}</div>
+    </div>
+
+    <!-- ── Narration audio ── -->
+    <audio id="narration" class="clip"
+           data-start="0"
+           data-duration="{{TOTAL_DURATION}}"
+           data-track-index="3"
+           data-volume="1.0"
+           src="narration.wav">
+    </audio>
+
+  </div>
+
+  <script>
+    /*
+     * GSAP Timeline — Your assistant fills in the timestamps from transcript.json
+     * All times are in seconds and must match audio beat boundaries.
+     */
+    const tl = gsap.timeline({ paused: true });
+
+    // Scene 1 entrance
+    tl.to(".eyebrow",  { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.3)
+      .to(".headline", { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 0.7)
+      .to(".subtitle", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.2)
+      .to("#scene-title", { opacity: 0, duration: 0.4 }, {{SCENE1_EXIT}})
+
+    // Scene 2 entrance
+      .to("#scene-demo",     { opacity: 1, duration: 0.4 },                    {{SCENE2_START}})
+      .to(".demo-copy h2",   { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, {{SCENE2_START_PLUS_0_3}})
+      .to(".demo-copy p",    { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, {{SCENE2_START_PLUS_0_6}})
+      .to(".demo-visual",    { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }, {{SCENE2_START_PLUS_0_4}})
+      .to("#scene-demo",     { opacity: 0, duration: 0.4 },                    {{SCENE2_EXIT}})
+
+    // Scene 3 entrance
+      .to("#scene-cta",      { opacity: 1, duration: 0.4 },                    {{SCENE3_START}})
+      .to(".cta-headline",   { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, {{SCENE3_START_PLUS_0_2}})
+      .to(".cta-label",      { opacity: 1, duration: 0.5 },                    {{SCENE3_START_PLUS_1_0}});
+
+    // Initial hidden states
+    gsap.set(".eyebrow, .headline, .subtitle, .cta-headline", { y: 24 });
+    gsap.set(".demo-copy h2, .demo-copy p", { x: -30, opacity: 0 });
+    gsap.set(".demo-visual", { scale: 0.96, opacity: 0 });
+
+    // Register with HyperFrames
+    window.__timelines = window.__timelines || {};
+    tl.set({}, {}, {{TOTAL_DURATION}});
+    window.__timelines.feature = tl;
+  </script>
+</body>
+</html>

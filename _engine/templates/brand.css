@@ -1,0 +1,16 @@
+/* Change these tokens to match your product. No remote fonts are required. */
+:root {
+  --brand-primary: #ab9bff;
+  --brand-bg: #10121b;
+  --brand-bg-surface: #1d2030;
+  --brand-bg-border: rgba(255,255,255,.14);
+  --brand-text: #fafaff;
+  --brand-text-muted: #b9bdcf;
+  --brand-text-subtle: #969bb3;
+  --brand-font: 'Segoe UI', Arial, sans-serif;
+  --brand-font-weight-heading: 700;
+  --brand-font-weight-body: 400;
+  --brand-glow: rgba(171,155,255,.12);
+  --brand-width: 1920px;
+  --brand-height: 1080px;
+}

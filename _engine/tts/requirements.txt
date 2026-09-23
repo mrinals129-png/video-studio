@@ -1,0 +1,6 @@
+# Kokoro TTS — free, offline, Apache 2.0
+# Install once: pip install -r _engine/tts/requirements.txt
+kokoro-onnx==0.4.9
+soundfile==0.13.1
+numpy==2.2.6
+imageio-ffmpeg==0.6.0

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Video Studio — overlay</title>
+
+  <!-- Brand tokens -->
+  <link rel="stylesheet" href="./brand.css" />
+
+  <!-- GSAP for overlay animations -->
+  <script src="./gsap.min.js"></script>
+
+  <style>
+    /* ── Reset ── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      background: #000;
+      font-family: var(--brand-font);
+      overflow: hidden;
+      color: var(--brand-text);
+    }
+
+    /* ══════════════════════════════════
+       LAYER 0 — User video (full-frame)
+       The source recording sits underneath everything.
+       Ken Burns scale / position animations applied by GSAP.
+    ══════════════════════════════════ */
+    #user-video {
+      position: absolute; inset: 0;
+      width: 1920px; height: 1080px;
+      object-fit: cover;
+      /* Ken Burns starting state — GSAP will animate this */
+      transform-origin: center center;
+    }
+
+    /* ══════════════════════════════════
+       LAYER 1 — Ambient vignette
+       Soft dark edges to make overlays legible over any video.
+    ══════════════════════════════════ */
+    .vignette {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 50%,
+        transparent 45%,
+        rgba(0,0,0,0.55) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ══════════════════════════════════
+       LAYER 2 — Overlay elements
+       All overlays sit above the video on z-index 10+.
+    ══════════════════════════════════ */
+
+    /* ── Caption bar — slides in from bottom ── */
+    .caption-bar {
+      position: absolute;
+      bottom: 180px; left: 50%;
+      width: 1400px;
+
+      background: rgba(22, 22, 22, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 20px 48px;
+      text-align: center;
+      max-width: 1400px;
+      opacity: 0;
+      z-index: 25;
+    }
+
+    .caption-bar p {
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--brand-text);
+      line-height: 1.4;
+    }
+
+    .caption-bar p strong {
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+
+    /* ── Callout chip — appears near a UI element ── */
+    .callout {
+      position: absolute;
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--brand-primary);
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 22px; font-weight: 600;
+      color: var(--brand-bg);
+      opacity: 0;
+      z-index: 20;
+      white-space: nowrap;
+    }
+
+    .callout::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+      flex-shrink: 0;
+    }
+
+    /* ── Zoom spotlight — highlights a region ── */
+    .spotlight {
+      position: absolute;
+      border: 2px solid var(--brand-primary);
+      border-radius: 8px;
+      box-shadow:
+        0 0 0 4000px rgba(0,0,0,0.45),
+        0 0 32px rgba(0,98,255,0.6);
+      opacity: 0;
+      z-index: 15;
+    }
+
+    /* ── Lower-third — feature name / speaker ── */
+    .lower-third {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 40px 100px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+      display: flex; align-items: flex-end; gap: 24px;
+      opacity: 0;
+      z-index: 25;
+    }
+
+    .lower-third-accent {
+      width: 4px; height: 64px;
+      background: var(--brand-primary);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .lower-third-text { display: flex; flex-direction: column; gap: 4px; }
+
+    .lower-third-title {
+      font-size: 32px; font-weight: 700;
+      color: var(--brand-text);
+    }
+
+    .lower-third-sub {
+      font-size: 20px; font-weight: 400;
+      color: rgba(244,244,244,0.60);
+    }
+
+    /* ── Intro title card — optional full-frame title before video starts ── */
+    #intro-card {
+      position: absolute; inset: 0;
+      background: var(--brand-bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 24px;
+      opacity: 0;
+      z-index: 30;
+    }
+
+    .intro-eyebrow {
+      font-size: 18px; font-weight: 600;
+      letter-spacing: 5px; text-transform: uppercase;
+      color: var(--brand-primary);
+    }
+
+    .intro-title {
+      font-size: 88px; font-weight: 700;
+      text-align: center; line-height: 1.05;
+    }
+    .intro-title span { color: var(--brand-primary); }
+
+    .intro-subtitle {
+      font-size: 30px;
+      color: var(--brand-text-muted);
+      text-align: center;
+    }
+
+    /* ── Outro card — CTA at the end ── */
+    #outro-card {
+      position: absolute; inset: 0;
+      background: var(--brand-bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 28px;
+      opacity: 0;
+      z-index: 30;
+    }
+
+    .outro-line1, .outro-line2, .intro-title, .intro-subtitle { max-width: 1600px; overflow-wrap: anywhere; }
+    .outro-line1 {
+      font-size: 88px; font-weight: 700;
+      text-align: center;
+    }
+    .outro-line2 {
+      font-size: 88px; font-weight: 700;
+      text-align: center;
+      color: var(--brand-primary);
+    }
+    .outro-sub {
+      font-size: 24px;
+      color: var(--brand-text-muted);
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="stage"
+       data-composition-id="{{COMPOSITION_ID}}"
+       data-duration="{{TOTAL_DURATION}}"
+       data-start="0"
+       data-width="1920"
+       data-height="1080">
+
+    <!-- ══════════════════════════════════
+         LAYER 0 — User's video
+    ══════════════════════════════════ -->
+    <video id="user-video" class="clip"
+           data-start="{{VIDEO_START}}"
+           data-duration="{{VIDEO_DURATION}}"
+           data-media-start="{{VIDEO_MEDIA_START}}"
+           data-track-index="0"
+           data-volume="{{VIDEO_VOLUME}}"
+           src="{{VIDEO_SRC}}"
+           muted>
+    </video>
+
+    <!-- Vignette always on -->
+    <div class="vignette"></div>
+
+    <!-- ══════════════════════════════════
+         OPTIONAL — Intro title card
+         Remove this block if no intro needed.
+         data-start: 0
+         data-duration: {{INTRO_DURATION}}
+    ══════════════════════════════════ -->
+    <div id="intro-card">
+      <div class="intro-eyebrow">{{PRODUCT_NAME}}</div>
+      <h1 class="intro-title"><span>{{FEATURE_TITLE_LINE1}}</span><br>{{FEATURE_TITLE_LINE2}}</h1>
+      <p class="intro-subtitle">{{FEATURE_TAGLINE}}</p>
+    </div>
+
+    <!-- ══════════════════════════════════
+         OVERLAYS — Add/remove as needed.
+         Your assistant fills timestamps from transcript.json.
+    ══════════════════════════════════ -->
+
+    <!-- Caption bar: appears when narration sentence starts -->
+    <div class="caption-bar" id="caption-1">
+      <p>{{CAPTION_1_TEXT}}</p>
+    </div>
+
+    <div class="caption-bar" id="caption-2">
+      <p>{{CAPTION_2_TEXT}}</p>
+    </div>
+
+    <div class="caption-bar" id="caption-3">
+      <p>{{CAPTION_3_TEXT}}</p>
+    </div>
+
+    <!-- Callout chip: label a UI element on screen -->
+    <div class="callout" id="callout-1"
+         style="top: {{CALLOUT_1_TOP}}px; left: {{CALLOUT_1_LEFT}}px;">
+      {{CALLOUT_1_TEXT}}
+    </div>
+
+    <!-- Spotlight box: draw attention to a screen region -->
+    <div class="spotlight" id="spotlight-1"
+         style="top: {{SPOTLIGHT_1_TOP}}px; left: {{SPOTLIGHT_1_LEFT}}px;
+                width: {{SPOTLIGHT_1_W}}px; height: {{SPOTLIGHT_1_H}}px;">
+    </div>
+
+    <!-- Lower third: feature name at the bottom -->
+    <div class="lower-third" id="lower-third">
+      <div class="lower-third-accent"></div>
+      <div class="lower-third-text">
+        <div class="lower-third-title">{{LOWER_THIRD_TITLE}}</div>
+        <div class="lower-third-sub">{{LOWER_THIRD_SUB}}</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         OPTIONAL — Outro card
+         Remove this block if no outro needed.
+    ══════════════════════════════════ -->
+    <div id="outro-card">
+      <h2 class="outro-line1">{{OUTRO_LINE1}}</h2>
+      <h2 class="outro-line2">{{OUTRO_LINE2}}</h2>
+      <p class="outro-sub">{{PRODUCT_NAME}}</p>
+    </div>
+
+    <!-- ── Narration audio (generated by TTS or user-supplied) ── -->
+    <audio id="narration" class="clip"
+           data-start="0"
+           data-duration="{{TOTAL_DURATION}}"
+           data-track-index="10"
+           data-volume="1.0"
+           src="narration.wav">
+    </audio>
+
+  </div>
+
+  <script>
+    /*
+     * GSAP Timeline for overlay-scene
+     * All timestamps filled by Your assistant from transcript.json after TTS runs.
+     * Placeholders follow the same named template values convention as other templates.
+     *
+     * Overlay types used:
+     *   - Intro card     → full-frame title before video
+     *   - Caption bar    → bottom-centre text, synced to narration
+     *   - Callout chip   → label pointing at a UI element
+     *   - Spotlight      → glowing border around a screen region
+     *   - Lower third    → persistent feature name bar
+     *   - Ken Burns      → slow pan/zoom on the user video
+     *   - Outro card     → full-frame CTA at end
+     */
+    const tl = gsap.timeline({ paused: true });
+
+    // ── Intro card ──
+    tl.to("#intro-card", { opacity: 1, duration: 0.5 }, 0)
+      .to(".intro-eyebrow",  { opacity: 1, y: 0, duration: 0.4 }, 0.3)
+      .to(".intro-title",    { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.6)
+      .to(".intro-subtitle", { opacity: 1, duration: 0.4 }, 1.1)
+      .to("#intro-card",     { opacity: 0, duration: 0.5 }, {{INTRO_EXIT}})
+
+    // ── Ken Burns on user video: slow zoom in over the full recording ──
+      .fromTo("#user-video",
+        { scale: 1.0, x: 0,   y: 0 },
+        { scale: 1.06, x: -24, y: -12, duration: {{VIDEO_DURATION}}, ease: "none" },
+        {{VIDEO_START}})
+
+    // ── Lower third: slides in after intro ──
+      .to("#lower-third",       { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, {{LOWER_THIRD_START}})
+
+    // ── Caption 1 ──
+      .to("#caption-1", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, {{CAPTION_1_START}})
+      .to("#caption-1", { opacity: 0, y: -8, duration: 0.3 }, {{CAPTION_1_END}})
+
+    // ── Caption 2 ──
+      .to("#caption-2", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, {{CAPTION_2_START}})
+      .to("#caption-2", { opacity: 0, y: -8, duration: 0.3 }, {{CAPTION_2_END}})
+
+    // ── Caption 3 ──
+      .to("#caption-3", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, {{CAPTION_3_START}})
+      .to("#caption-3", { opacity: 0, y: -8, duration: 0.3 }, {{CAPTION_3_END}})
+
+    // ── Callout chip 1 ──
+      .to("#callout-1", { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.5)" }, {{CALLOUT_1_START}})
+      .to("#callout-1", { opacity: 0, duration: 0.25 }, {{CALLOUT_1_END}})
+
+    // ── Spotlight 1 ──
+      .to("#spotlight-1", { opacity: 1, duration: 0.35 }, {{SPOTLIGHT_1_START}})
+      .to("#spotlight-1", { opacity: 0, duration: 0.35 }, {{SPOTLIGHT_1_END}})
+
+    // ── Lower third: fade out before outro ──
+      .to("#lower-third", { opacity: 0, duration: 0.4 }, {{LOWER_THIRD_END}})
+
+    // ── Outro card ──
+      .to("#outro-card",  { opacity: 1, duration: 0.5 }, {{OUTRO_START}})
+      .to(".outro-line1", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, {{OUTRO_START_PLUS_0_3}})
+      .to(".outro-line2", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, {{OUTRO_START_PLUS_0_9}})
+      .to(".outro-sub",   { opacity: 1, duration: 0.4 }, {{OUTRO_START_PLUS_1_5}});
+
+    // ── Initial hidden / start states ──
+    gsap.set(".intro-eyebrow, .intro-title, .intro-subtitle", { opacity: 0, y: 20 });
+    gsap.set(".outro-line1, .outro-line2, .outro-sub", { opacity: 0, y: 20 });
+    gsap.set(".caption-bar", { xPercent: -50, y: 16 });
+    gsap.set("#callout-1", { scale: 0.85 });
+    gsap.set("#lower-third", { y: 12 });
+
+    // ── Register with HyperFrames ──
+    window.__timelines = window.__timelines || {};
+    tl.set({}, {}, {{TOTAL_DURATION}});
+    window.__timelines["{{COMPOSITION_ID}}"] = tl;
+  </script>
+</body>
+</html>

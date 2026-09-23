@@ -1,0 +1,22 @@
+# Original import: kept locally, never publish its assets or history.
+/Video studio/
+/__MACOSX/
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+*.onnx
+*.bin
+*.partial
+.env
+.env.*
+!.env.example
+.DS_Store
+.cache/
+.verification/
+compositions/
+output/*
+!output/.gitkeep
+assets/*
+!assets/.gitkeep
+*.log
