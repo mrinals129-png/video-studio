@@ -1,0 +1,21 @@
+{
+  "name": "Video Studio",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/node:2": { "version": "22" },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "remoteUser": "vscode",
+  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  "forwardPorts": [3002],
+  "portsAttributes": {
+    "3002": {
+      "label": "Video Studio editor",
+      "onAutoForward": "notify",
+      "requireLocalPort": true
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start.sh",
+  "waitFor": "postCreateCommand"
+}

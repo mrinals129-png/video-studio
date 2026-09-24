@@ -1,5 +1,7 @@
 # Use the studio through GitHub
 
+For the **full interactive editor** online, use [GitHub Codespaces](CODESPACES.md). The workflow below is for rendering a committed script without an interactive editor.
+
 Codex and Claude Code can run this studio on GitHub Actions. No always-on server or separate app account is needed. GitHub Pages serves the latest video you explicitly publish.
 
 Tell either assistant:

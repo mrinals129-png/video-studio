@@ -8,6 +8,8 @@ Run it locally with a browser preview, or ask your assistant to render on GitHub
 
 ## Get started
 
+**Full editor in your browser:** [open a GitHub Codespace](https://codespaces.new/mrinals129-png/video-studio). It runs the same studio as localhost on a GitHub development computer. Setup and editor startup are configured automatically; see [Codespaces instructions and verification status](docs/CODESPACES.md). Codespaces uses your account's compute and storage allowance.
+
 **Through your assistant, online:** follow [the GitHub workflow](docs/ONLINE.md). Codex or Claude Code can submit a committed script, wait for the render, and download the MP4. Publishing to Pages is optional. The public page plays finished videos; editing stays with your assistant.
 
 **On your own computer:**
