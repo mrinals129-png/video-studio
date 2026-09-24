@@ -5,6 +5,7 @@ This repository turns Markdown scripts and optional screenshots or recordings in
 ## Start here
 
 - Read `docs/WORKFLOW.md` for production steps and supported commands.
+- For rendering on GitHub or publishing to Pages, read `docs/ONLINE.md`. Use the on-demand workflow; no separate server is needed. Keep `publish=false` unless sharing is requested.
 - `npm ci`, then `npm run setup` installs project-local dependencies. Node 22+ and Python 3.10–3.12 are required.
 - `npm run demo` creates the sample video; `npm run preview` opens its local editing server.
 - `npm test` checks parsing, escaping, timing, and media validation.

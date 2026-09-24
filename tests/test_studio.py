@@ -79,6 +79,7 @@ class StudioTests(unittest.TestCase):
             studio.build(self.script,self.root/'out',{'duration':12,'words':[]},video=source,video_start=2)
         text=(self.root/'out/index.html').read_text(encoding='utf-8')
         self.assertIn('data-media-start="2"',text)
+        self.assertIn('data-start="3.0" data-hf-media-start-basis="global"',text)
         self.assertIn('src="source.mp4"',text)
         self.assertTrue((self.root/'out/source.mp4').exists())
 

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Watch the latest published video from Video Studio, a video-making tool for Codex and Claude Code.">
+  <title>{{TITLE}} · Video Studio</title>
+  <style>
+    :root { color-scheme:light; font:16px/1.6 'Segoe UI',Arial,sans-serif; color:#202333; background:#f4f3f8; }
+    * { box-sizing:border-box; }
+    body { margin:0; }
+    a { color:#5540a3; text-underline-offset:4px; }
+    a:focus-visible, summary:focus-visible, video:focus-visible { outline:3px solid #7961cf; outline-offset:5px; }
+    .wrap { max-width:1120px; margin:auto; padding:28px 32px 48px; }
+    header, .details { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    header { margin-bottom:32px; }
+    .brand { font-weight:650; font-size:20px; text-decoration:none; color:inherit; }
+    header nav { display:flex; gap:24px; font-size:14px; }
+    video { display:block; width:100%; aspect-ratio:16/9; background:#10121b; border-radius:12px; }
+    .details { align-items:flex-start; margin-top:24px; }
+    h1 { margin:0 0 4px; font-size:clamp(26px,4vw,38px); line-height:1.25; letter-spacing:-.8px; overflow-wrap:anywhere; }
+    p { margin:0; color:#616478; max-width:68ch; }
+    .download { display:inline-block; padding:11px 22px; border-radius:7px; background:#5540a3; color:white; text-decoration:none; font-weight:600; white-space:nowrap; }
+    .duration { font-size:14px; margin-top:12px; }
+    details { margin-top:28px; padding:20px 0; border-top:1px solid #dcdbe5; border-bottom:1px solid #dcdbe5; }
+    summary { cursor:pointer; font-weight:600; }
+    details p { margin-top:12px; color:#383c50; }
+    footer { margin-top:32px; display:flex; justify-content:space-between; gap:24px; font-size:14px; }
+    @media(max-width:600px) { .wrap { padding:20px 18px 32px; } header { margin-bottom:24px; } header nav { gap:16px; } .details, footer { flex-direction:column; gap:18px; } .download { width:100%; text-align:center; } video { border-radius:6px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="./">Video Studio</a>
+      <nav aria-label="Project"><a href="https://github.com/mrinals129-png/video-studio/blob/main/docs/ONLINE.md">Use with an assistant</a><a href="https://github.com/mrinals129-png/video-studio">GitHub</a></nav>
+    </header>
+    <main>
+      <video controls playsinline preload="metadata" poster="poster.jpg" aria-label="{{TITLE}}">
+        <source src="video.mp4" type="video/mp4">
+        <track kind="captions" src="captions.vtt" srclang="en" label="English (estimated timing)">
+        Your browser cannot play this video. <a href="video.mp4">Download the MP4</a>.
+      </video>
+      <div class="details">
+        <div><h1>{{TITLE}}</h1><p>{{TAGLINE}}</p><p class="duration">{{DURATION}} seconds · Narrated video</p></div>
+        <a class="download" href="video.mp4" download>Download MP4</a>
+      </div>
+      <details><summary>Read the narration</summary><p>{{NARRATION}}</p></details>
+    </main>
+    <footer><p>Make videos with Codex or Claude Code.</p><a href="https://github.com/mrinals129-png/video-studio/actions/workflows/render.yml">View render jobs</a></footer>
+  </div>
+</body>
+</html>

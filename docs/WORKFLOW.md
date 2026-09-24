@@ -2,6 +2,8 @@
 
 Open this repository in Codex or Claude Code. Codex reads `AGENTS.md` and discovers `.agents/skills/video-studio`; Claude Code reads `CLAUDE.md` and exposes `/video-studio` from `.claude/skills/video-studio`. Both use this workflow.
 
+To use GitHub's compute instead of the local renderer, follow [ONLINE.md](ONLINE.md). The optional Pages deployment publishes a playable MP4 after a successful render.
+
 1. Copy `SCRIPT-TEMPLATE.md` into `scripts/your-feature.md`. Fill in the title, product, tagline, and narration. Animation notes guide the assistant; the command-line generator does not interpret them automatically.
 2. Run `npm run studio -- make --script scripts/your-feature.md`. This generates local speech, builds three animated scenes, checks the HTML, renders an MP4, and verifies its audio/video streams and decoding.
 3. Open `output/your-feature.mp4`. Use `npm run studio -- preview compositions/your-feature` to inspect the timeline in your browser.

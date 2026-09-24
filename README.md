@@ -2,11 +2,15 @@
 
 Turn a Markdown script into a narrated product video with **Codex or Claude Code**. Bring screenshots or a screen recording, refine the scenes with your assistant, and export an MP4 on your own computer.
 
-This is a local video-making toolkit with a browser preview, not a hosted service. It uses HyperFrames for HTML animation and rendering, and Kokoro for local speech. No video-generation API key is required.
+Run it locally with a browser preview, or ask your assistant to render on GitHub Actions. Publish selected videos to [the playback page](https://mrinals129-png.github.io/video-studio/). It uses HyperFrames for HTML animation and rendering, and Kokoro for speech. No video-generation API key or separate server is required.
 
 ![Frame from the generated sample video](docs/preview.png)
 
 ## Get started
+
+**Through your assistant, online:** follow [the GitHub workflow](docs/ONLINE.md). Codex or Claude Code can submit a committed script, wait for the render, and download the MP4. Publishing to Pages is optional. The public page plays finished videos; editing stays with your assistant.
+
+**On your own computer:**
 
 Install [Node.js 22+](https://nodejs.org/) and [Python 3.10–3.12](https://www.python.org/downloads/), then open this folder in Codex or Claude Code and ask:
 
